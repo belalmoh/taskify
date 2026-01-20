@@ -1,20 +1,39 @@
 @import "tailwindcss";
 
+/* -------------------------------------------------------------------------- */
+/*                                 Base Tokens                                */
+/* -------------------------------------------------------------------------- */
 :root {
-  /* Base Colors */
-  --background: #F4F5F7;
-  /* Light gray/blue board background */
-  --foreground: #172B4D;
-  /* Dark blue/gray for text */
-  --card-background: #FFFFFF;
-  --column-background: #EBECF0;
+  /* --- Colors: Light Theme (Default) --- */
 
-  /* Primary Actions */
+  /* Backgrounds */
+  --background: #F4F5F7;
+  /* Main app background (light gray/blue) */
+  --card-background: #FFFFFF;
+  /* Card / Content background */
+  --column-background: #EBECF0;
+  /* List/Column background */
+
+  /* Foreground / Text */
+  --foreground: #172B4D;
+  /* Primary text */
+  --muted-foreground: #5E6C84;
+  /* Secondary/Muted text */
+  --accent: #EBECF0;
+  --accent-foreground: #172B4D;
+
+  /* Primary Brand */
   --primary: #0052CC;
+
   --primary-foreground: #FFFFFF;
   --primary-hover: #0065FF;
 
-  /* Status Colors (Pastel-ish for tags) */
+  /* Borders & Dividers */
+  --border: #DFE1E6;
+  --input-border: #DFE1E6;
+  --input-focus: #4C9AFF;
+
+  /* Status / Tags (Pastel backgrounds, strong text) */
   --status-green-bg: #E3FCEF;
   --status-green-text: #006644;
   --status-blue-bg: #DEEBFF;
@@ -26,19 +45,78 @@
   --status-purple-bg: #EAE6FF;
   --status-purple-text: #403294;
 
-  /* Borders & Shadows */
-  --border: #DFE1E6;
+  /* Shadows */
   --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.25);
   --shadow-md: 0 4px 8px -2px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
-
-  /* Inputs */
-  --input-border: #DFE1E6;
-  --input-focus: #4C9AFF;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                 Dark Theme                                 */
+/* -------------------------------------------------------------------------- */
+:root[data-theme="dark"] {
+  /* Backgrounds */
+  --background: #1D2125;
+  /* Deep blue-gray */
+  --card-background: #22272B;
+  /* Slightly lighter than bg */
+  --column-background: #101204;
+  /* Darker column */
+
+  /* Foreground / Text */
+  --foreground: #B6C2CF;
+  /* Light gray text */
+  --muted-foreground: #9FADBC;
+  /* Muted text */
+  --accent: #2C333A;
+  --accent-foreground: #B6C2CF;
+
+  /* Primary Brand (Adjusted for dark mode contrast if needed) */
+  --primary: #579DFF;
+  /* Lighter blue for dark mode visibility */
+  --primary-foreground: #1D2125;
+  --primary-hover: #85B8FF;
+
+  /* Borders */
+  --border: #A6C5E229;
+  /* Subtle transparent border */
+  --input-border: #A6C5E229;
+  --input-focus: #85B8FF;
+
+  /* Status Colors (Dimmed backgrounds, lighter text) */
+  --status-green-bg: #1F845A29;
+  --status-green-text: #216E4E;
+  /* Use brighter text/dim bg? Adjusted for verify later */
+  --status-green-bg: #224236;
+  --status-green-text: #7EE2B8;
+  /* Revised for specific dark look */
+
+  /* Let's simplify status maps to be readable on dark */
+  --status-green-bg: #164B35;
+  --status-green-text: #7EE2B8;
+  --status-blue-bg: #09326C;
+  --status-blue-text: #85B8FF;
+  --status-red-bg: #5D1F1A;
+  --status-red-text: #FF9C8F;
+  --status-yellow-bg: #533F04;
+  --status-yellow-text: #F5CD47;
+  --status-purple-bg: #352C63;
+  --status-purple-text: #9F8FEF;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.6);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                            Tailwind Configuration                          */
+/* -------------------------------------------------------------------------- */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
   --color-card: var(--card-background);
   --color-column: var(--column-background);
 
@@ -66,18 +144,6 @@
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark Mode Overrides - Keeping it simple for now, can expand later */
-    --background: #1D2125;
-    --foreground: #9FADBC;
-    --card-background: #22272B;
-    --column-background: #101204;
-    /* Very dark for columns */
-    --border: #445566;
-  }
 }
 
 body {
