@@ -1,26 +1,88 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base Colors */
+  --background: #F4F5F7;
+  /* Light gray/blue board background */
+  --foreground: #172B4D;
+  /* Dark blue/gray for text */
+  --card-background: #FFFFFF;
+  --column-background: #EBECF0;
+
+  /* Primary Actions */
+  --primary: #0052CC;
+  --primary-foreground: #FFFFFF;
+  --primary-hover: #0065FF;
+
+  /* Status Colors (Pastel-ish for tags) */
+  --status-green-bg: #E3FCEF;
+  --status-green-text: #006644;
+  --status-blue-bg: #DEEBFF;
+  --status-blue-text: #0747A6;
+  --status-red-bg: #FFEBE6;
+  --status-red-text: #BF2600;
+  --status-yellow-bg: #FFFAE6;
+  --status-yellow-text: #172B4D;
+  --status-purple-bg: #EAE6FF;
+  --status-purple-text: #403294;
+
+  /* Borders & Shadows */
+  --border: #DFE1E6;
+  --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.25);
+  --shadow-md: 0 4px 8px -2px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+
+  /* Inputs */
+  --input-border: #DFE1E6;
+  --input-focus: #4C9AFF;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card-background);
+  --color-column: var(--column-background);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+
+  --color-status-green-bg: var(--status-green-bg);
+  --color-status-green-text: var(--status-green-text);
+  --color-status-blue-bg: var(--status-blue-bg);
+  --color-status-blue-text: var(--status-blue-text);
+  --color-status-red-bg: var(--status-red-bg);
+  --color-status-red-text: var(--status-red-text);
+  --color-status-yellow-bg: var(--status-yellow-bg);
+  --color-status-yellow-text: var(--status-yellow-text);
+  --color-status-purple-bg: var(--status-purple-bg);
+  --color-status-purple-text: var(--status-purple-text);
+
+  --color-border: var(--border);
+  --color-input: var(--input-border);
+  --color-ring: var(--input-focus);
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark Mode Overrides - Keeping it simple for now, can expand later */
+    --background: #1D2125;
+    --foreground: #9FADBC;
+    --card-background: #22272B;
+    --column-background: #101204;
+    /* Very dark for columns */
+    --border: #445566;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }

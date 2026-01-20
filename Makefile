@@ -2,7 +2,7 @@
 
 run-web-local:
 	@echo "Running web locally..."
-	@cd apps/frontend/taskify-web && npm run dev
+	@cd apps/frontend/taskify-web && npm run dev -- --inspect
 
 run-gateway-local:
 	@echo "Running gateway locally..."
