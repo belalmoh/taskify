@@ -15,7 +15,7 @@ export const Avatar = ({ src, fallback, size = 'md', className = '' }: AvatarPro
   };
 
   return (
-    <div className={`relative inline-flex shrink-0 overflow-hidden rounded-full border border-white ${sizes[size]} ${className}`}>
+    <div className={`relative inline-flex shrink-0 overflow-hidden rounded-full border border-white dark:border-gray-100 ${sizes[size]} ${className}`}>
       {src ? (
         <img
           src={src}
@@ -23,7 +23,7 @@ export const Avatar = ({ src, fallback, size = 'md', className = '' }: AvatarPro
           className="aspect-square h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-status-blue-bg text-status-blue-text font-bold">
+        <div className="flex h-full w-full items-center justify-center bg-status-blue-bg text-status-blue-text font-bold dark:bg-status-blue-bg dark:text-status-blue-text">
           {fallback.substring(0, 2).toUpperCase()}
         </div>
       )}

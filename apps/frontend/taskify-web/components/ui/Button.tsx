@@ -16,13 +16,13 @@ export const Button = ({
   className = '',
   ...props
 }: ButtonProps) => {
-  const baseStyles = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-[3px]";
-  
+  const baseStyles = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none disabled:opacity-50 rounded-[3px] cursor-pointer active:brightness-90";
+
   const variants = {
-    primary: "bg-primary text-primary-foreground hover:bg-primary-hover border border-transparent shadow-card",
-    secondary: "bg-background text-foreground hover:bg-column border border-border shadow-card",
-    ghost: "bg-transparent text-foreground hover:bg-column border border-transparent",
-    danger: "bg-status-red-bg text-status-red-text hover:bg-red-100 border border-transparent"
+    primary: "bg-primary text-primary-foreground hover:bg-primary-hover shadow-card",
+    secondary: "bg-background text-foreground hover:bg-column shadow-card",
+    ghost: "bg-transparent text-foreground hover:bg-column",
+    danger: "bg-status-red-bg text-status-red-text hover:bg-red-100 shadow-card"
   };
 
   const sizes = {

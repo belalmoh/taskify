@@ -1,26 +1,26 @@
-import React from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Avatar } from '../ui/Avatar';
 import { ThemeToggle } from '../ui/ThemeToggle';
+import Link from 'next/link';
 
 export const Navbar = () => {
   return (
     <nav className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shadow-sm">
       {/* Left: Logo & Nav Links */}
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-white font-bold">
             T
           </div>
           <span className="text-xl font-bold tracking-tight text-foreground">Taskify</span>
-        </div>
+        </Link>
 
         <div className="hidden md:flex items-center gap-4 text-sm font-medium text-gray-600">
-          <button className="hover:text-primary">Workspaces</button>
-          <button className="hover:text-primary">Recent</button>
-          <button className="hover:text-primary">Starred</button>
-          <button className="hover:text-primary">Templates</button>
+          <Link href="/workspaces" className="hover:text-primary">Workspaces</Link>
+          <Link href="/recent" className="hover:text-primary">Recent</Link>
+          <Link href="/starred" className="hover:text-primary">Starred</Link>
+          <Link href="/templates" className="hover:text-primary">Templates</Link>
         </div>
 
         <Button variant="primary" size="sm" className="hidden md:flex">Create</Button>
