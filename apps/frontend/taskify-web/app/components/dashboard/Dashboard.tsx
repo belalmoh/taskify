@@ -1,10 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { Navbar } from "@/components/layout/Navbar";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { BoardListCard, CreateBoardCard } from "@/components/dashboard/BoardListCard";
+import { CreateBoardModal } from "@/components/dashboard/CreateBoardModal";
 
 export const Dashboard = () => {
+    const [isCreateBoardModalOpen, setIsCreateBoardModalOpen] = useState(false);
+
     return (
         <div className="flex h-screen flex-col bg-background">
             <Navbar />
@@ -60,7 +64,7 @@ export const Dashboard = () => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                     <BoardListCard title="Main board" href="/board/main" backgroundImage="linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb)" />
                                     <BoardListCard title="Welcome to Taskify!" href="/board/welcome" backgroundImage="linear-gradient(to right, #56ab2f, #a8e063)" />
-                                    <CreateBoardCard />
+                                    <CreateBoardCard onClick={() => setIsCreateBoardModalOpen(true)} />
                                 </div>
                             </div>
 
@@ -80,7 +84,7 @@ export const Dashboard = () => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                     <BoardListCard title="Socialize board" href="/board/1" backgroundImage="linear-gradient(to right, #cc2b5e, #753a88)" isStarred />
-                                    <CreateBoardCard />
+                                    <CreateBoardCard onClick={() => setIsCreateBoardModalOpen(true)} />
                                 </div>
                             </div>
 
@@ -88,6 +92,8 @@ export const Dashboard = () => {
                     </div>
                 </div>
             </main>
+
+            <CreateBoardModal isOpen={isCreateBoardModalOpen} onClose={() => setIsCreateBoardModalOpen(false)} />
         </div>
     );
 };

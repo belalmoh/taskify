@@ -8,9 +8,10 @@ interface ModalProps {
     onClose: () => void;
     children: React.ReactNode;
     className?: string;
+    title?: string;
 }
 
-export const Modal = ({ isOpen, onClose, children, className = '' }: ModalProps) => {
+export const Modal = ({ isOpen, onClose, children, className = '', title }: ModalProps) => {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -50,11 +51,25 @@ export const Modal = ({ isOpen, onClose, children, className = '' }: ModalProps)
 
             {/* Modal Container */}
             <div
-                className={`relative z-50 w-full max-w-4xl transform rounded-lg bg-card shadow-2xl transition-all animate-in fade-in zoom-in-95 duration-200 ${className}`}
+                className={`relative z-50 w-full max-w-4xl transform rounded-lg bg-card shadow-2xl transition-all ${className}`}
                 role="dialog"
                 aria-modal="true"
             >
-                {children}
+                {/* Header */}
+                {title && (
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+                        <div className="w-4"></div>
+                        <h2 className="text-sm font-semibold text-center text-foreground">{title}</h2>
+                        <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors p-1 hover:bg-muted rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+                    </div>
+                )}
+
+                {/* Content */}
+                <div className="p-6">
+                    {children}
+                </div>
             </div>
         </div>,
         document.body

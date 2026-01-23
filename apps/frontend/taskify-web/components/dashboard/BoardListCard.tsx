@@ -45,9 +45,9 @@ export const BoardListCard = ({ title, href, backgroundImage, isStarred }: Board
     );
 };
 
-export const CreateBoardCard = () => {
+export const CreateBoardCard = ({ onClick }: { onClick?: () => void }) => {
     return (
-        <button className="flex h-24 flex-col items-center justify-center gap-1 rounded bg-column hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-muted-foreground hover:text-foreground">
+        <button onClick={onClick} className="flex h-24 flex-col items-center justify-center gap-1 rounded bg-column hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-muted-foreground hover:text-foreground">
             <span className="text-sm font-medium">Create new board</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
         </button>
