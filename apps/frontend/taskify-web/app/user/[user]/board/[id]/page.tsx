@@ -13,8 +13,6 @@ export default function BoardPage() {
 
     return (
         <div className="flex h-screen flex-col bg-background">
-            <Navbar />
-
             <main className="flex-1 flex flex-col overflow-hidden">
                 {/* Board Header (Optional simple version) */}
                 <div className="flex h-14 items-center justify-between px-6 border-b border-border bg-background/50 backdrop-blur-sm">

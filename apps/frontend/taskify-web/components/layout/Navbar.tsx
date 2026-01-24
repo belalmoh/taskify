@@ -17,7 +17,7 @@ export const Navbar = () => {
         </Link>
 
         <div className="hidden md:flex items-center gap-4 text-sm font-medium text-gray-600">
-          <Link href="/workspaces" className="hover:text-primary">Workspaces</Link>
+          <Link href="/user/john" className="hover:text-primary">Dashboard</Link>
           <Link href="/recent" className="hover:text-primary">Recent</Link>
           <Link href="/starred" className="hover:text-primary">Starred</Link>
           <Link href="/templates" className="hover:text-primary">Templates</Link>
