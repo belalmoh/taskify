@@ -9,7 +9,7 @@ export const Navbar = () => {
     <nav className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shadow-sm">
       {/* Left: Logo & Nav Links */}
       <div className="flex items-center gap-6">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <Link href="/user/john" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-white font-bold">
             T
           </div>
