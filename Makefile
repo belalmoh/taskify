@@ -1,23 +1,16 @@
-.PHONY: run-web-local run-gateway-local run-board-local run-insight-local run-all-local
+.PHONY: run-web-local run-all-local run-backend-local
+
+run-backend-local:
+	@echo "Running docker locally..."
+	@docker-compose up -d
+
+	@echo "Running nestjs locally..."
+	@cd apps/backend/taskify-nestjs && npm run dev
 
 run-web-local:
 	@echo "Running web locally..."
 	@cd apps/frontend/taskify-web && npm run dev -- --inspect
 
-run-gateway-local:
-	@echo "Running gateway locally..."
-	@cd apps/backend/taskify-gateway && npm run dev
-
-run-board-local:
-	@echo "Running board locally..."
-	@cd apps/backend/taskify-board && npm run dev
-
-run-insight-local:
-	@echo "Running insight locally..."
-	@cd apps/backend/taskify-insight && npm run dev
-
 run-all-local:
 	@make run-web-local &
-	@make run-gateway-local &
-	@make run-board-local &
-	@make run-insight-local
+	@make run-backend-local
