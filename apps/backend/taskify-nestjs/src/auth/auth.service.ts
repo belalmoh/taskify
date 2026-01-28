@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { AuthResponseDto, CreateUserDto, LoginUserDto, UserResponseDto } from './dto/user.dto';
+import { AuthResponseDto, CreateUserDto, LoginUserDto, UserResponseDto } from '../common/dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';

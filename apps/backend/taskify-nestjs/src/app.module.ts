@@ -6,6 +6,7 @@ import { BoardsModule } from './boards/boards.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { WorkspacesModule } from './workspaces/workspaces.module';
 
 @Module({
 	imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
 		}),
 		AuthModule,
 		BoardsModule,
+		WorkspacesModule,
 		NotificationsModule,
 	],
 	controllers: [AppController],

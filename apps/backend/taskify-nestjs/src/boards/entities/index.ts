@@ -1,4 +1,3 @@
-export { Workspace } from './workspace.entity';
 export { Board } from './board.entity';
 export { BoardColumn } from './column.entity';
 export { Card } from './card.entity';

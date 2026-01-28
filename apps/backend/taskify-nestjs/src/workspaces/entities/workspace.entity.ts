@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, ManyToMany, JoinColumn, JoinTable } from "typeorm";
 import { User } from "../../auth/entities/user.entity";
-import { Board } from "./board.entity";
 
 @Entity('workspaces')
 export class Workspace {
@@ -31,9 +30,6 @@ export class Workspace {
         inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' }
     })
     members: User[];
-
-    @OneToMany(() => Board, (board) => board.workspace, { cascade: true })
-    boards: Board[];
 
     @CreateDateColumn()
     createdAt: Date;

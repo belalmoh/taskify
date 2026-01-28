@@ -1,10 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { User } from "../../auth/entities/user.entity";
 import { BoardColumn } from "./column.entity";
-import { Workspace } from "./workspace.entity";
+import { Workspace } from "../../workspaces/entities/workspace.entity";
 
 @Entity('boards')
 export class Board {
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -31,7 +32,7 @@ export class Board {
     @JoinColumn({ name: 'userId' })
     owner: User;
 
-    @ManyToOne(() => Workspace, (workspace) => workspace.boards, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Workspace, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'workspaceId' })
     workspace: Workspace;
 
