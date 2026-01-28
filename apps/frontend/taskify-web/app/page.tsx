@@ -2,9 +2,19 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { AuthModal } from '@/components/auth/AuthModal';
+import { LoginForm } from '@/components/auth/LoginForm';
+import { SignupForm } from '@/components/auth/SignupForm';
 
 export default function LandingPage() {
 	const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+	const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
+
+	const openAuthModal = (mode: 'login' | 'signup') => {
+		setAuthMode(mode);
+		setIsAuthModalOpen(true);
+	};
 
 	const stages = [
 		{
@@ -60,7 +70,7 @@ export default function LandingPage() {
 	];
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden relative">
+		<div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden relative">
 			{/* Animated gradient overlay */}
 			<div
 				className="absolute inset-0 opacity-30"
@@ -89,16 +99,22 @@ export default function LandingPage() {
 			{/* Navigation */}
 			<nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
 				<div className="flex items-center gap-2">
-					<div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+					<div className="w-10 h-10 bg-linear-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
 						<span className="text-white font-bold text-xl">T</span>
 					</div>
 					<span className="text-white font-bold text-xl">Taskify</span>
 				</div>
 				<div className="flex items-center gap-4">
-					<button className="px-4 py-2 text-white hover:text-gray-300 transition-colors">
+					<button
+						onClick={() => openAuthModal('login')}
+						className="px-4 py-2 text-white hover:text-gray-300 transition-colors cursor-pointer"
+					>
 						Log In
 					</button>
-					<button className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all">
+					<button
+						onClick={() => openAuthModal('signup')}
+						className="px-6 py-2 bg-linear-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all cursor-pointer"
+					>
 						Sign Up
 					</button>
 				</div>
@@ -113,7 +129,7 @@ export default function LandingPage() {
 					>
 						Visualize Your Workflow.
 						<br />
-						<span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+						<span className="bg-linear-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
 							Empower Your Team.
 						</span>
 					</h1>
@@ -128,7 +144,7 @@ export default function LandingPage() {
 						className="flex items-center justify-center gap-4 pt-4"
 						style={{ animation: 'slideInUp 0.8s ease-out 0.4s backwards' }}
 					>
-						<Link href="/user/john/workspace/1/boards" className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105">
+						<Link href="/user/john/workspace/1/boards" className="px-8 py-3 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105 cursor-pointer">
 							Try it now
 						</Link>
 					</div>
@@ -151,10 +167,10 @@ export default function LandingPage() {
 								</div>
 								<span className="text-white font-semibold ml-4">Board</span>
 								<div className="flex gap-2 ml-4">
-									<button className="px-3 py-1 text-sm text-gray-300 hover:text-white transition-colors">
+									<button className="px-3 py-1 text-sm text-gray-300 hover:text-white transition-colors cursor-pointer">
 										Stages
 									</button>
-									<button className="px-3 py-1 text-sm text-gray-300 hover:text-white transition-colors">
+									<button className="px-3 py-1 text-sm text-gray-300 hover:text-white transition-colors cursor-pointer">
 										Stages
 									</button>
 								</div>
@@ -175,7 +191,7 @@ export default function LandingPage() {
 									{/* Stage Header */}
 									<div className="flex items-center gap-2">
 										<div
-											className={`w-3 h-3 rounded-full bg-gradient-to-r ${stage.color}`}
+											className={`w-3 h-3 rounded-full bg-linear-to-r ${stage.color}`}
 										></div>
 										<span className="text-white font-medium text-sm">{stage.name}</span>
 										<span className="text-gray-400 text-xs ml-auto">→</span>
@@ -200,7 +216,7 @@ export default function LandingPage() {
 														{task.avatars.map((avatar, i) => (
 															<div
 																key={i}
-																className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-xs border-2 border-slate-800"
+																className="w-6 h-6 rounded-full bg-linear-to-br from-purple-400 to-pink-600 flex items-center justify-center text-xs border-2 border-slate-800"
 															>
 																{avatar}
 															</div>
@@ -209,7 +225,7 @@ export default function LandingPage() {
 													<div className="ml-auto">
 														<div className="w-16 h-1 bg-gray-700 rounded-full overflow-hidden">
 															<div
-																className={`h-full bg-gradient-to-r ${stage.color}`}
+																className={`h-full bg-linear-to-r ${stage.color}`}
 																style={{ width: '60%' }}
 															></div>
 														</div>
@@ -227,7 +243,7 @@ export default function LandingPage() {
 							<span className="text-gray-400 text-sm">Progress</span>
 							<div className="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
 								<div
-									className="h-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500"
+									className="h-full bg-linear-to-r from-green-500 via-blue-500 to-purple-500"
 									style={{ width: '65%' }}
 								></div>
 							</div>
@@ -240,13 +256,13 @@ export default function LandingPage() {
 								{['👤', '👥', '👤', '👥'].map((avatar, i) => (
 									<div
 										key={i}
-										className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center border-2 border-slate-800"
+										className="w-8 h-8 rounded-full bg-linear-to-br from-cyan-400 to-blue-600 flex items-center justify-center border-2 border-slate-800"
 									>
 										{avatar}
 									</div>
 								))}
 							</div>
-							<button className="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-lg transition-colors">
+							<button className="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white text-lg transition-colors cursor-pointer">
 								+
 							</button>
 						</div>
@@ -280,7 +296,7 @@ export default function LandingPage() {
 											style={{ width: `${60 + i * 15}%` }}
 										></div>
 									</div>
-									<div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center text-xs">
+									<div className="w-6 h-6 rounded-full bg-linear-to-br from-purple-400 to-pink-600 flex items-center justify-center text-xs">
 										👤
 									</div>
 								</div>
@@ -296,7 +312,7 @@ export default function LandingPage() {
 						</div>
 						<div className="space-y-4">
 							<div className="flex items-center gap-3">
-								<div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center">
+								<div className="w-10 h-10 rounded-full bg-linear-to-br from-cyan-400 to-blue-600 flex items-center justify-center">
 									👤
 								</div>
 								<div className="flex-1">
@@ -309,22 +325,45 @@ export default function LandingPage() {
 								{['👤', '👥', '👤', '👥'].map((avatar, i) => (
 									<div
 										key={i}
-										className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-600 flex items-center justify-center border-2 border-slate-800"
+										className="w-10 h-10 rounded-full bg-linear-to-br from-purple-400 to-pink-600 flex items-center justify-center border-2 border-slate-800"
 									>
 										{avatar}
 									</div>
 								))}
-								<button className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white border-2 border-slate-800 transition-colors">
+								<button className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center text-white border-2 border-slate-800 transition-colors cursor-pointer">
 									+
 								</button>
 							</div>
-							<button className="w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all">
+							<button className="w-full py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all cursor-pointer">
 								Add task
 							</button>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			<AuthModal
+				isOpen={isAuthModalOpen}
+				onClose={() => setIsAuthModalOpen(false)}
+				title={authMode === 'signup' ? 'Create Account' : 'Log In'}
+				description={
+					authMode === 'signup'
+						? 'Enter your details to get started.'
+						: 'Enter your credentials to access your account.'
+				}
+				illustrationTitle={authMode === 'signup' ? 'Start your journey' : 'Welcome back'}
+				illustrationDesc={
+					authMode === 'signup'
+						? 'Join thousands of teams managing their workflow with Taskify.'
+						: 'Continue where you left off and stay on top of your tasks.'
+				}
+			>
+				{authMode === 'signup' ? (
+					<SignupForm onSwitchToLogin={() => setAuthMode('login')} />
+				) : (
+					<LoginForm onSwitchToSignup={() => setAuthMode('signup')} />
+				)}
+			</AuthModal>
 		</div>
 	);
 }
