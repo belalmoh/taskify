@@ -28,7 +28,7 @@ export class Board {
     visibility: string;
 
     // Relations
-    @ManyToOne(() => User, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, { onDelete: 'SET NULL' })
     @JoinColumn({ name: 'userId' })
     owner: User;
 

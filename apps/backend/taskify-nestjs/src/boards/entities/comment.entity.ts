@@ -15,7 +15,7 @@ export class Comment {
     @JoinColumn({ name: 'cardId' })
     card: Card;
 
-    @ManyToOne(() => User, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, { onDelete: 'NO ACTION' })
     @JoinColumn({ name: 'userId' })
     author: User;
 

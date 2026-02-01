@@ -1,11 +1,29 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo, useActionState, useEffect } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { useFormStatus } from 'react-dom';
+import { signupAction } from '@/actions/auth';
+import { useAuthentication } from '@/contexts';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface SignupFormProps {
     onSwitchToLogin: () => void;
+}
+
+const SignupButton = () => {
+    const { pending } = useFormStatus();
+    return (
+        <Button
+            type="submit"
+            disabled={pending}
+            className="w-full bg-linear-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+        >
+            {pending ? 'Signing Up...' : 'Sign Up'}
+        </Button>
+    );
 }
 
 export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
@@ -13,6 +31,9 @@ export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    const [state, formAction] = useActionState(signupAction, null);
+    const router = useRouter();
 
     const passwordStrength = useMemo(() => {
         if (!password) return 0;
@@ -33,62 +54,109 @@ export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
         return 'bg-green-500';
     }, [passwordStrength]);
 
+    const { login, isAuthenticated } = useAuthentication();
+
+    useEffect(() => {
+        if (state?.success && !isAuthenticated) {
+            login({
+                id: state.data?.user.id,
+                name: state.data?.user.name,
+                email: state.data?.user.email,
+            });
+
+            // Show success toast
+            toast.success('Welcome to Taskify!', {
+                description: 'Your account has been created successfully.',
+            });
+
+            // Redirect to user's dashboard after a short delay
+            setTimeout(() => {
+                router.push(`/user/${state.user.name}`);
+            }, 1000);
+        } else if (state?.success === false && state?.message) {
+            // Show error toast for failed signup
+            toast.error('Signup Failed', {
+                description: state.message,
+            });
+        }
+    }, [state, login, isAuthenticated, router]);
+
     return (
         <div className="space-y-6">
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+
+            <form className="space-y-4" action={formAction}>
+                {/* Username Field */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300 ml-1">Username</label>
                     <Input
                         type="text"
+                        name="name"
                         placeholder="johndoe"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         className="bg-slate-800/50 border-white/10 text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 transition-all"
                     />
+                    {state?.errors?.name && (
+                        <p className="text-xs text-red-400 ml-1">{state.errors.name[0]}</p>
+                    )}
                 </div>
 
+                {/* Email Field */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300 ml-1">Email</label>
                     <Input
                         type="email"
+                        name="email"
                         placeholder="name@company.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="bg-slate-800/50 border-white/10 text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 transition-all"
                     />
+                    {state?.errors?.email && (
+                        <p className="text-xs text-red-400 ml-1">{state.errors.email[0]}</p>
+                    )}
                 </div>
 
+                {/* Password Field */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300 ml-1">Password</label>
                     <Input
                         type="password"
+                        name="password"
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="bg-slate-800/50 border-white/10 text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 transition-all"
                     />
+                    {/* Password Strength Meter */}
                     <div className="h-1 w-full bg-gray-800 rounded-full mt-2 overflow-hidden">
                         <div
                             className={`h-full ${strengthColor} transition-all duration-500`}
                             style={{ width: `${passwordStrength}%` }}
                         ></div>
                     </div>
+                    {state?.errors?.password && (
+                        <p className="text-xs text-red-400 ml-1">{state.errors.password[0]}</p>
+                    )}
                 </div>
 
+                {/* Confirm Password Field */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300 ml-1">Confirm Password</label>
                     <Input
                         type="password"
+                        name="confirmPassword"
                         placeholder="••••••••"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="bg-slate-800/50 border-white/10 text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 transition-all"
                     />
+                    {state?.errors?.confirmPassword && (
+                        <p className="text-xs text-red-400 ml-1">{state.errors.confirmPassword[0]}</p>
+                    )}
                 </div>
 
-                <Button className="w-full bg-linear-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
-                    Sign Up
-                </Button>
+                <SignupButton />
             </form>
 
             <div className="relative">
