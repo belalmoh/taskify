@@ -1,8 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-
-type Theme = 'light' | 'dark';
+import Cookies from 'js-cookie';
 
 interface AuthenticationContextType {
     user: {
@@ -11,12 +10,14 @@ interface AuthenticationContextType {
         email: string;
     } | null;
     isAuthenticated: boolean;
+    isLoading: boolean;
     login: (user: {
         id: string;
         name: string;
         email: string;
     }) => void;
     logout: () => void;
+    checkAuth: () => Promise<void>;
 }
 
 const AuthenticationContext = createContext<AuthenticationContextType | undefined>(undefined);
@@ -28,6 +29,7 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
         email: string;
     } | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const login = (user: {
         id: string;
@@ -38,14 +40,71 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
         setIsAuthenticated(true);
     };
 
-    const logout = () => {
+    const logout = async () => {
         setUser(null);
         setIsAuthenticated(false);
+        // Remove the cookie
+        Cookies.remove('access_token');
+
+        // Optional: Call backend logout endpoint if you have one
+        // await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
+        //     method: 'POST',
+        //     credentials: 'include',
+        // });
     };
 
+    const checkAuth = async () => {
+        setIsLoading(true);
+
+        // Check if access_token cookie exists
+        const token = Cookies.get('access_token');
+
+        if (!token) {
+            setIsAuthenticated(false);
+            setUser(null);
+            setIsLoading(false);
+            return;
+        }
+
+        // Token exists, validate it with backend
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/me`, {
+                method: 'GET',
+                credentials: 'include', // Important: sends cookies
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log(response);
+            if (response.ok) {
+                const userData = await response.json();
+                setUser({
+                    id: userData.id,
+                    name: userData.name,
+                    email: userData.email,
+                });
+                setIsAuthenticated(true);
+            } else {
+                // Token is invalid or expired
+                console.warn('Token validation failed, logging out');
+                await logout();
+            }
+        } catch (error) {
+            console.error('Error validating token:', error);
+            await logout();
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Check authentication on mount
+    useEffect(() => {
+        checkAuth();
+    }, []);
 
     return (
-        <AuthenticationContext.Provider value={{ user, isAuthenticated, login, logout }}>
+        <AuthenticationContext.Provider value={{ user, isAuthenticated, isLoading, login, logout, checkAuth }}>
             {children}
         </AuthenticationContext.Provider>
     );

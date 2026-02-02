@@ -14,9 +14,6 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<T>
 				} as ApiResponse<any>;
 			}),
 			catchError((error) => {
-				const ctx = context.switchToHttp();
-				const response = ctx.getResponse();
-
 				const status = error instanceof HttpException
 					? error.getStatus()
 					: HttpStatus.INTERNAL_SERVER_ERROR;
@@ -31,10 +28,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<T>
 					timestamp: new Date().toISOString(),
 				};
 
-				response.status(status).json(errorResponse);
-
-				// Return empty observable to complete the stream
-				return throwError(() => error);
+				throw new HttpException(errorResponse, status);
 			}),
 		);
 	}

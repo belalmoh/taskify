@@ -3,13 +3,14 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './common/interceptor/response/response.interceptor';
+import { LoggerInterceptor } from './common/interceptor/logger/logger.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalInterceptors(new ResponseInterceptor(), new LoggerInterceptor());
   app.enableCors();
 
   // app.connectMicroservice<MicroserviceOptions>({

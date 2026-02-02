@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Nest Framework",
+            "runtimeArgs": [
+                "run",
+                "start:debug"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/apps/backend/taskify-nestjs",
+            "program": "${workspaceFolder}/apps/backend/taskify-nestjs/src/main.ts",
+            "outFiles": [
+                "${workspaceFolder}/apps/backend/taskify-nestjs/dist/**/*.js"
+            ],
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true
+        }
+    ]
+}

@@ -5,7 +5,7 @@ run-backend-local:
 	@docker-compose up -d
 
 	@echo "Running nestjs locally..."
-	@cd apps/backend/taskify-nestjs && npm run dev
+	@cd apps/backend/taskify-nestjs && npm run dev -- --inspect
 
 run-web-local:
 	@echo "Running web locally..."

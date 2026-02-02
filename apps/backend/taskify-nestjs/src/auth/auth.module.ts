@@ -11,7 +11,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 		TypeOrmModule.forFeature([User]),
 		JwtModule.register({
 			secret: process.env.JWT_SECRET || 'secretKey',
-			signOptions: { expiresIn: '1h' },
+			signOptions: { expiresIn: '7d' },
 		}),
 	],
 	providers: [AuthService, JwtAuthGuard],

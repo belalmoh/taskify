@@ -70,7 +70,7 @@ export const signupAction = async (prevState: SignUpFormState | null, formData: 
             // Note: In production, you might need more sophisticated cookie parsing
             const cookieParts = setCookieHeader.split(';')[0].split('=');
             if (cookieParts.length === 2) {
-                cookieStore.set(cookieParts[0], cookieParts[1], {
+                cookieStore.set('access_token', cookieParts[1], {
                     httpOnly: true,
                     secure: true,
                     sameSite: 'strict',

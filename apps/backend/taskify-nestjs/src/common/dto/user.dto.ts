@@ -41,15 +41,16 @@ export class LoginUserDto {
 }
 
 export class RefreshUserDto {
-    @IsNotEmpty({ message: 'Token is required' })
-    @IsString({ message: 'Token must be a string' })
-    token: string;
+    @IsNotEmpty({ message: 'Refresh token is required' })
+    @IsString({ message: 'Refresh token must be a string' })
+    refreshToken: string;
 }
 
 // Responses
 export class AuthResponseDto {
     user: Omit<UserDto, 'createdAt' | 'updatedAt'>;
-    token: string;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export class UserResponseDto {

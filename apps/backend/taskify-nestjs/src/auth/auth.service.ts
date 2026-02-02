@@ -5,14 +5,22 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
+import { Transactional } from '../common/decorators/transactional.decorator';
 
 @Injectable()
 export class AuthService {
+    private JWT_REFRESH_EXPIRATION_TIME;
+
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
+        private readonly configService: ConfigService,
         private jwtService: JwtService
-    ) { }
+    ) {
+        this.JWT_REFRESH_EXPIRATION_TIME = Number(this.configService.get<number>('JWT_REFRESH_EXPIRATION_TIME')) || '7d';
+    }
 
+    @Transactional('userRepository')
     async register(body: CreateUserDto): Promise<AuthResponseDto> {
         try {
             // Hash password before saving
@@ -21,20 +29,24 @@ export class AuthService {
                 ...body,
                 password: hashedPassword
             });
+
+            // Save user (within transaction managed by decorator)
             const savedUser = await this.userRepository.save(user);
 
+            // Generate tokens (if this fails, transaction will rollback)
             const payload = { id: savedUser.id, email: savedUser.email, name: savedUser.name };
-            const token = this.jwtService.sign(payload);
+            const accessToken = this.jwtService.sign(payload);
+            const refreshToken = this.jwtService.sign(payload, { expiresIn: this.JWT_REFRESH_EXPIRATION_TIME });
 
             // Return user without password, createdAt, updatedAt
             const { password, createdAt, updatedAt, ...userResponse } = savedUser;
-            return { user: userResponse, token };
+            return { user: userResponse, accessToken, refreshToken };
 
         } catch (error) {
             if (error.code === '23505') { // PostgreSQL unique violation
                 throw new ConflictException('User with this email already exists');
             }
-            throw new BadRequestException('Failed to register user');
+            throw new BadRequestException(error.message || 'Failed to register user');
         }
     }
 
@@ -50,11 +62,12 @@ export class AuthService {
         }
 
         const payload = { id: user.id, email: user.email, name: user.name };
-        const token = this.jwtService.sign(payload);
+        const accessToken = this.jwtService.sign(payload);
+        const refreshToken = this.jwtService.sign(payload, { expiresIn: this.JWT_REFRESH_EXPIRATION_TIME });
 
         // Return user without password, createdAt, updatedAt
         const { password, createdAt, updatedAt, ...userResponse } = user;
-        return { user: userResponse, token };
+        return { user: userResponse, accessToken, refreshToken };
     }
 
     async refreshToken(token: string): Promise<AuthResponseDto> {
@@ -66,10 +79,11 @@ export class AuthService {
             }
             const payload = { id: user.id, email: user.email, name: user.name };
             const newToken = this.jwtService.sign(payload);
+            const newRefreshToken = this.jwtService.sign(payload, { expiresIn: this.JWT_REFRESH_EXPIRATION_TIME });
 
             // Return user without password, createdAt, updatedAt
             const { password, createdAt, updatedAt, ...userResponse } = user;
-            return { user: userResponse, token: newToken };
+            return { user: userResponse, accessToken: newToken, refreshToken: newRefreshToken };
         } catch (error) {
             if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
                 throw new UnauthorizedException('Invalid or expired token');

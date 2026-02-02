@@ -13,12 +13,12 @@ interface SignupFormProps {
     onSwitchToLogin: () => void;
 }
 
-const SignupButton = () => {
+const SignupButton = ({ invalid }: { invalid: boolean }) => {
     const { pending } = useFormStatus();
     return (
         <Button
             type="submit"
-            disabled={pending}
+            disabled={pending || invalid}
             className="w-full bg-linear-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
         >
             {pending ? 'Signing Up...' : 'Sign Up'}
@@ -38,8 +38,8 @@ export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
     const passwordStrength = useMemo(() => {
         if (!password) return 0;
         let strength = 0;
-        if (password.length > 6) strength += 20;
-        if (password.length > 10) strength += 20;
+        if (password.length >= 6) strength += 20;
+        if (password.length >= 10) strength += 20;
         if (/[A-Z]/.test(password)) strength += 20;
         if (/[0-9]/.test(password)) strength += 20;
         if (/[^A-Za-z0-9]/.test(password)) strength += 20;
@@ -56,6 +56,12 @@ export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
 
     const { login, isAuthenticated } = useAuthentication();
 
+    const isInvalidForm = useMemo(() => {
+        const emptyFields = !username || !email || !password || !confirmPassword;
+        const mismatchingPasswords = password !== confirmPassword;
+        return emptyFields || mismatchingPasswords;
+    }, [username, email, password, confirmPassword]);
+
     useEffect(() => {
         if (state?.success && !isAuthenticated) {
             login({
@@ -71,7 +77,7 @@ export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
 
             // Redirect to user's dashboard after a short delay
             setTimeout(() => {
-                router.push(`/user/${state.user.name}`);
+                router.push(`/user/${state.data.user.name}`);
             }, 1000);
         } else if (state?.success === false && state?.message) {
             // Show error toast for failed signup
@@ -156,7 +162,7 @@ export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
                     )}
                 </div>
 
-                <SignupButton />
+                <SignupButton invalid={isInvalidForm} />
             </form>
 
             <div className="relative">
