@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { redirect } from 'next/navigation';
 
 interface AuthenticationContextType {
     user: {
@@ -45,12 +46,19 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
         setIsAuthenticated(false);
         // Remove the cookie
         Cookies.remove('access_token');
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/auth/logout`, {
+                method: 'POST',
+                credentials: 'include', // Include cookies
+            });
 
-        // Optional: Call backend logout endpoint if you have one
-        // await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
-        //     method: 'POST',
-        //     credentials: 'include',
-        // });
+            if (!response.ok) {
+                console.error('Logout failed');
+            }
+
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     const checkAuth = async () => {

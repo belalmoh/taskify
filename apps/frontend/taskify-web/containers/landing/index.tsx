@@ -19,7 +19,7 @@ export function LandingContainer({ initialUser }: LandingContainerProps) {
     const [hoveredCard, setHoveredCard] = useState<string | null>(null);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
-    const { isAuthenticated, user } = useAuthentication();
+    const { isAuthenticated, user, logout } = useAuthentication();
     const router = useRouter();
 
     // Use server-provided user data or client-side auth state
@@ -37,6 +37,11 @@ export function LandingContainer({ initialUser }: LandingContainerProps) {
         } else {
             openAuthModal('signup');
         }
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        router.push('/');
     };
 
     const stages = [
@@ -129,12 +134,20 @@ export function LandingContainer({ initialUser }: LandingContainerProps) {
                 </div>
                 <div className="flex items-center gap-4">
                     {isUserAuthenticated && currentUser ? (
-                        <button
-                            onClick={() => router.push(`/user/${currentUser.name}`)}
-                            className="px-6 py-2 bg-linear-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all cursor-pointer"
-                        >
-                            Dashboard
-                        </button>
+                        <>
+                            <button
+                                onClick={() => router.push(`/user/${currentUser.name}`)}
+                                className="px-6 py-2 bg-linear-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all cursor-pointer"
+                            >
+                                Dashboard
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2 text-white border border-white/20 rounded-lg hover:bg-white/10 transition-all cursor-pointer"
+                            >
+                                Logout
+                            </button>
+                        </>
                     ) : (
                         <>
                             <button

@@ -3,7 +3,6 @@ import { LandingContainer } from '@/containers/landing';
 
 async function getCurrentUser() {
 	try {
-		debugger;
 		const cookieStore = await cookies();
 		const token = cookieStore.get('access_token');
 

@@ -73,7 +73,28 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(JwtAuthGuard)
     async me(@Request() req) {
-        console.log(req);
         return req.user;
+    }
+
+    @Post('logout')
+    @HttpCode(HttpStatus.OK)
+    async logout(@Res({ passthrough: true }) response: Response) {
+        // Clear access token cookie
+        response.clearCookie('access_token', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            path: '/',
+        });
+
+        // Clear refresh token cookie
+        response.clearCookie('refresh_token', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            path: '/',
+        });
+
+        return { message: 'Logged out successfully' };
     }
 }
