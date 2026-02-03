@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { redirect } from 'next/navigation';
+import { userStorage } from '@/lib/utils/userStorage';
 
 interface AuthenticationContextType {
     user: {
@@ -39,6 +39,7 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
     }) => {
         setUser(user);
         setIsAuthenticated(true);
+        userStorage.setUser(user);
     };
 
     const logout = async () => {
@@ -53,11 +54,13 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
             });
 
             if (!response.ok) {
-                console.error('Logout failed');
+                throw new Error('Logout failed');
             }
 
         } catch (error) {
-            console.error('Logout error:', error);
+            throw error;
+        } finally {
+            userStorage.clearUser();
         }
     };
 
@@ -66,6 +69,14 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
 
         // Check if access_token cookie exists
         const token = Cookies.get('access_token');
+        const user = userStorage.getUser();
+
+        if (user) {
+            setUser(user);
+            setIsAuthenticated(true);
+            setIsLoading(false);
+            return;
+        }
 
         if (!token) {
             setIsAuthenticated(false);
@@ -82,9 +93,11 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                next: {
+                    revalidate: 3600
+                }
             });
 
-            console.log(response);
             if (response.ok) {
                 const userData = await response.json();
                 setUser({
@@ -95,11 +108,9 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
                 setIsAuthenticated(true);
             } else {
                 // Token is invalid or expired
-                console.warn('Token validation failed, logging out');
                 await logout();
             }
         } catch (error) {
-            console.error('Error validating token:', error);
             await logout();
         } finally {
             setIsLoading(false);

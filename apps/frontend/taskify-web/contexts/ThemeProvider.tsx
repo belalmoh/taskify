@@ -11,38 +11,52 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+// Helper function to safely get initial theme
+function getInitialTheme(): Theme {
+	// Only access localStorage in the browser
+	if (typeof window !== 'undefined') {
+		const savedTheme = localStorage.getItem('theme') as Theme | null;
+		if (savedTheme) {
+			return savedTheme;
+		}
+		// Fallback to system preference
+		if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			return 'dark';
+		}
+	}
+	return 'light';
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-	const [theme, setTheme] = useState<Theme>('light');
+	const [theme, setTheme] = useState<Theme>(getInitialTheme);
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
-		// 1. Check local storage
-		const savedTheme = localStorage.getItem('theme') as Theme | null;
-
-		if (savedTheme) {
-			setTheme(savedTheme);
-			updateDOM(savedTheme);
-		} else {
-			// 2. Fallback to system preference
-			const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-			setTheme(systemPreference);
-			updateDOM(systemPreference);
-		}
 		setMounted(true);
-	}, []);
+		// Apply theme to DOM on mount
+		updateDOM(theme);
+	}, [theme]);
 
 	const updateDOM = (newTheme: Theme) => {
-		const root = window.document.documentElement;
-		root.setAttribute('data-theme', newTheme);
+		if (typeof window !== 'undefined') {
+			const root = window.document.documentElement;
+			root.setAttribute('data-theme', newTheme);
+		}
 	};
 
 	const toggleTheme = () => {
 		const newTheme = theme === 'light' ? 'dark' : 'light';
 		setTheme(newTheme);
-		localStorage.setItem('theme', newTheme);
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('theme', newTheme);
+		}
 		updateDOM(newTheme);
 	};
 
+	// Prevent flash of unstyled content
+	if (!mounted) {
+		return null;
+	}
 
 	return (
 		<ThemeContext.Provider value={{ theme, toggleTheme }}>

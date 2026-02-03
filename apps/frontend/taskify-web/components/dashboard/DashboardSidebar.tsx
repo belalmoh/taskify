@@ -4,13 +4,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CreateWorkspaceModal } from './CreateWorkspaceModal';
+import { DashboardSidebarSkeleton } from './DashboardSidebarSkeleton';
 
 const WORKSPACES = [
     { id: '1', name: 'Life Coach - NU Graduation Project', shortName: 'Life Coach - NU', initial: 'L', color: 'from-blue-400 to-blue-600' },
     { id: '2', name: 'Side Hustle', shortName: 'Side Hustle', initial: 'S', color: 'from-purple-400 to-pink-600' },
 ];
 
-export const DashboardSidebar = () => {
+export const DashboardSidebar = ({ isLoading }: { isLoading: boolean }) => {
     const [isCreateWorkspaceModalOpen, setIsCreateWorkspaceModalOpen] = useState(false);
     const [expandedWorkspaces, setExpandedWorkspaces] = useState<Set<string>>(new Set()); // Default first workspace expanded
     const pathname = usePathname();
@@ -30,6 +31,10 @@ export const DashboardSidebar = () => {
     const isWorkspaceActive = (workspaceId: string) => {
         return pathname?.startsWith(`/workspace/${workspaceId}`);
     };
+
+    if (isLoading) {
+        return <DashboardSidebarSkeleton />;
+    }
 
     return (
         <>

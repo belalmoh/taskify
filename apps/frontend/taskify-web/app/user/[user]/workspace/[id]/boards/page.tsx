@@ -33,17 +33,6 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
     const starredBoards = boards.filter(board => board.starred);
     const yourBoards = boards.filter(board => !board.starred);
 
-    // if (!workspace) {
-    //     return (
-    //         <div className="min-h-screen bg-background">
-    //             <Navbar />
-    //             <div className="container mx-auto px-6 py-8">
-    //                 <p className="text-muted-foreground">Workspace not found</p>
-    //             </div>
-    //         </div>
-    //     );
-    // }
-
     return (
         <>
             <div className="flex-1">
