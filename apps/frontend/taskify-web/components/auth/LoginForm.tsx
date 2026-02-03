@@ -1,50 +1,103 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState, useEffect, useActionState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { useFormStatus } from 'react-dom';
+import { loginAction } from '@/actions/auth';
+import { useAuthentication } from '@/contexts';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface LoginFormProps {
     onSwitchToSignup: () => void;
 }
 
+const LoginButton = ({ invalid }: { invalid: boolean }) => {
+    const { pending } = useFormStatus();
+    return (
+        <Button
+            type="submit"
+            disabled={pending || invalid}
+            className="w-full bg-linear-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+        >
+            {pending ? 'Logging in...' : 'Log In'}
+        </Button>
+    );
+}
+
 export const LoginForm = ({ onSwitchToSignup }: LoginFormProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [state, formAction] = useActionState(loginAction, null);
+
+    const { login, isAuthenticated } = useAuthentication();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (state?.success && !isAuthenticated) {
+            login({
+                id: state.data?.user.id,
+                name: state.data?.user.name,
+                email: state.data?.user.email,
+            });
+
+            // Show success toast
+            toast.success('Welcome to Taskify!', {
+                description: 'You have successfully logged in.',
+            });
+
+            // Redirect to user's dashboard after a short delay
+            setTimeout(() => {
+                router.push(`/user/${state.data.user.name}`);
+            }, 1000);
+        } else if (state?.success === false && state?.message) {
+            // Show error toast for failed signup
+            toast.error('Login Failed', {
+                description: state.message,
+            });
+        }
+    }, [state, login, isAuthenticated, router]);
 
     return (
         <div className="space-y-6">
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" action={formAction}>
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-300 ml-1">Email</label>
                     <Input
+                        name="email"
                         type="email"
                         placeholder="name@company.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="bg-slate-800/50 border-white/10 text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 transition-all"
                     />
+                    {state?.errors?.email && (
+                        <p className="text-xs text-red-400 ml-1">{state.errors.email[0]}</p>
+                    )}
                 </div>
 
                 <div className="space-y-2">
-                    <div className="flex justify-between items-center ml-1">
-                        <label className="text-sm font-medium text-gray-300">Password</label>
-                        <button className="text-xs text-purple-400 hover:text-purple-300 transition-colors cursor-pointer">
-                            Forgot password?
-                        </button>
-                    </div>
                     <Input
+                        name="password"
                         type="password"
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="bg-slate-800/50 border-white/10 text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-purple-500/20 transition-all"
                     />
+                    {state?.errors?.password && (
+                        <p className="text-xs text-red-400 ml-1">{state.errors.password[0]}</p>
+                    )}
+                    <div className="flex justify-between items-center ml-1">
+                        <label className="text-sm font-medium text-gray-300">Password</label>
+                        <button className="text-xs text-purple-400 hover:text-purple-300 transition-colors cursor-pointer">
+                            Forgot password?
+                        </button>
+                    </div>
                 </div>
 
-                <Button className="w-full bg-linear-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-6 rounded-xl shadow-lg shadow-purple-500/20 transition-all transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
-                    Log In
-                </Button>
+                <LoginButton invalid={!email || !password} />
             </form>
 
             <div className="relative">

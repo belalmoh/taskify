@@ -47,7 +47,7 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
         // Remove the cookie
         Cookies.remove('access_token');
         try {
-            const response = await fetch(`${process.env.BACKEND_URL}/api/auth/logout`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include', // Include cookies
             });

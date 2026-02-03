@@ -152,7 +152,7 @@ export function LandingContainer({ initialUser }: LandingContainerProps) {
                         <>
                             <button
                                 onClick={() => openAuthModal('login')}
-                                className="px-4 py-2 text-white hover:text-gray-300 transition-colors cursor-pointer"
+                                className="px-4 py-2 text-white border border-white/20 rounded-lg hover:bg-white/10 transition-all cursor-pointer"
                             >
                                 Log In
                             </button>
