@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function DashboardPage() {
-    const { isAuthenticated, isLoading } = useAuthentication();
+    const { isAuthenticated, isLoading, user } = useAuthentication();
     const router = useRouter();
 
     useEffect(() => {
@@ -22,5 +22,5 @@ export default function DashboardPage() {
         return <DashboardSkeleton />;
     }
 
-    return <Dashboard />;
+    return <Dashboard userId={user?.id || ''} />;
 }

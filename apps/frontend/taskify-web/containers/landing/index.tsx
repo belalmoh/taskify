@@ -33,7 +33,7 @@ export function LandingContainer({ initialUser }: LandingContainerProps) {
 
     const handleTryNow = () => {
         if (isUserAuthenticated && currentUser) {
-            router.push(`/user/${currentUser.name}`);
+            router.push(`/user/${currentUser.id}`);
         } else {
             openAuthModal('signup');
         }
@@ -136,7 +136,7 @@ export function LandingContainer({ initialUser }: LandingContainerProps) {
                     {isUserAuthenticated && currentUser ? (
                         <>
                             <button
-                                onClick={() => router.push(`/user/${currentUser.name}`)}
+                                onClick={() => router.push(`/user/${currentUser.id}`)}
                                 className="px-6 py-2 bg-linear-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all cursor-pointer"
                             >
                                 Dashboard

@@ -5,7 +5,7 @@ import { useState, use } from 'react';
 import { CreateBoardModal } from '@/components/dashboard/CreateBoardModal';
 
 interface WorkspacePageProps {
-    params: Promise<{ id: string }>;
+    params: Promise<{ workspace_id: string; user_id: string }>;
 }
 
 const WORKSPACE_DATA: Record<string, { name: string; initial: string; color: string }> = {
@@ -26,10 +26,10 @@ const BOARDS_BY_WORKSPACE: Record<string, Array<{ id: string; title: string; bac
 };
 
 export default function WorkspacePage({ params }: WorkspacePageProps) {
-    const { id } = use(params);
+    const { workspace_id, user_id } = use(params);
     const [isCreateBoardModalOpen, setIsCreateBoardModalOpen] = useState(false);
-    const workspace = WORKSPACE_DATA[id];
-    const boards = BOARDS_BY_WORKSPACE[id] || [];
+    const workspace = WORKSPACE_DATA[workspace_id];
+    const boards = BOARDS_BY_WORKSPACE[workspace_id] || [];
     const starredBoards = boards.filter(board => board.starred);
     const yourBoards = boards.filter(board => !board.starred);
 
@@ -68,7 +68,7 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
                             {starredBoards.map((board) => (
                                 <BoardListCard
                                     key={board.id}
-                                    href={`/user/john/board/${board.id}`}
+                                    href={`/user/${user_id}/board/${board.id}`}
                                     title={board.title}
                                     backgroundImage={board.background}
                                     isStarred={board.starred}
@@ -85,7 +85,7 @@ export default function WorkspacePage({ params }: WorkspacePageProps) {
                         {yourBoards.map((board) => (
                             <BoardListCard
                                 key={board.id}
-                                href={`/user/john/board/${board.id}`}
+                                href={`/user/${user_id}/board/${board.id}`}
                                 title={board.title}
                                 backgroundImage={board.background}
                                 isStarred={board.starred}

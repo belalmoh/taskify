@@ -4,12 +4,13 @@ import { Avatar } from '../ui/Avatar';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import Link from 'next/link';
 
-export const Navbar = () => {
+export const Navbar = ({ user }: { user: any }) => {
+	console.log({ user });
 	return (
 		<nav className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shadow-sm">
 			{/* Left: Logo & Nav Links */}
 			<div className="flex items-center gap-6">
-				<Link href="/user/john" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+				<Link href={`/user/${user?.id}`} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
 					<div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-white font-bold">
 						T
 					</div>
@@ -17,7 +18,7 @@ export const Navbar = () => {
 				</Link>
 
 				<div className="hidden md:flex items-center gap-4 text-sm font-medium text-gray-600">
-					<Link href="/user/john" className="hover:text-primary">Dashboard</Link>
+					<Link href={`/user/${user?.id}`} className="hover:text-primary">Dashboard</Link>
 					<Link href="/recent" className="hover:text-primary">Recent</Link>
 					<Link href="/starred" className="hover:text-primary">Starred</Link>
 					<Link href="/templates" className="hover:text-primary">Templates</Link>

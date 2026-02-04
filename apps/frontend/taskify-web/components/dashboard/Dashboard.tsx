@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { BoardListCard, CreateBoardCard } from "@/components/dashboard/BoardListCard";
 import { CreateBoardModal } from "@/components/dashboard/CreateBoardModal";
 
-export const Dashboard = () => {
+export const Dashboard = ({ userId }: { userId: string }) => {
     const [isCreateBoardModalOpen, setIsCreateBoardModalOpen] = useState(false);
 
     return (
@@ -16,7 +16,7 @@ export const Dashboard = () => {
                     <h2 className="text-lg font-bold text-foreground">Starred boards</h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    <BoardListCard title="Socialize board" href="/user/john/board/1" backgroundImage="linear-gradient(to right, #cc2b5e, #753a88)" isStarred />
+                    <BoardListCard title="Socialize board" href={`/user/${userId}/board/1`} backgroundImage="linear-gradient(to right, #cc2b5e, #753a88)" isStarred />
                 </div>
             </div>
 
@@ -27,10 +27,10 @@ export const Dashboard = () => {
                     <h2 className="text-lg font-bold text-foreground">Recently viewed</h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    <BoardListCard title="Socialize board" href="/user/john/board/1" backgroundImage="linear-gradient(to right, #cc2b5e, #753a88)" />
-                    <BoardListCard title="Distributed Team Brainstorming" href="/user/john/board/brainstorming" backgroundImage="linear-gradient(to right, #42275a, #734b6d)" />
-                    <BoardListCard title="Main board" href="/user/john/board/main" backgroundImage="linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb)" />
-                    <BoardListCard title="Welcome to Taskify!" href="/user/john/board/welcome" backgroundImage="linear-gradient(to right, #56ab2f, #a8e063)" />
+                    <BoardListCard title="Socialize board" href={`/user/${userId}/board/1`} backgroundImage="linear-gradient(to right, #cc2b5e, #753a88)" />
+                    <BoardListCard title="Distributed Team Brainstorming" href={`/user/${userId}/board/brainstorming`} backgroundImage="linear-gradient(to right, #42275a, #734b6d)" />
+                    <BoardListCard title="Main board" href={`/user/${userId}/board/main`} backgroundImage="linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb)" />
+                    <BoardListCard title="Welcome to Taskify!" href={`/user/${userId}/board/welcome`} backgroundImage="linear-gradient(to right, #56ab2f, #a8e063)" />
                 </div>
             </div>
 
@@ -53,8 +53,8 @@ export const Dashboard = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        <BoardListCard title="Main board" href="/user/john/board/main" backgroundImage="linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb)" />
-                        <BoardListCard title="Welcome to Taskify!" href="/user/john/board/welcome" backgroundImage="linear-gradient(to right, #56ab2f, #a8e063)" />
+                        <BoardListCard title="Main board" href={`/user/${userId}/board/main`} backgroundImage="linear-gradient(to right, #1fa2ff, #12d8fa, #a6ffcb)" />
+                        <BoardListCard title="Welcome to Taskify!" href={`/user/${userId}/board/welcome`} backgroundImage="linear-gradient(to right, #56ab2f, #a8e063)" />
                         <CreateBoardCard onClick={() => setIsCreateBoardModalOpen(true)} />
                     </div>
                 </div>
@@ -74,7 +74,7 @@ export const Dashboard = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        <BoardListCard title="Socialize board" href="/user/john/board/1" backgroundImage="linear-gradient(to right, #cc2b5e, #753a88)" isStarred />
+                        <BoardListCard title="Socialize board" href={`/user/${userId}/board/1`} backgroundImage="linear-gradient(to right, #cc2b5e, #753a88)" isStarred />
                         <CreateBoardCard onClick={() => setIsCreateBoardModalOpen(true)} />
                     </div>
                 </div>

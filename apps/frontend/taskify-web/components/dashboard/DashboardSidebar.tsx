@@ -11,7 +11,7 @@ const WORKSPACES = [
     { id: '2', name: 'Side Hustle', shortName: 'Side Hustle', initial: 'S', color: 'from-purple-400 to-pink-600' },
 ];
 
-export const DashboardSidebar = ({ isLoading }: { isLoading: boolean }) => {
+export const DashboardSidebar = ({ isLoading, userId }: { isLoading: boolean; userId: string }) => {
     const [isCreateWorkspaceModalOpen, setIsCreateWorkspaceModalOpen] = useState(false);
     const [expandedWorkspaces, setExpandedWorkspaces] = useState<Set<string>>(new Set()); // Default first workspace expanded
     const pathname = usePathname();
@@ -41,7 +41,7 @@ export const DashboardSidebar = ({ isLoading }: { isLoading: boolean }) => {
             <div className="w-64 shrink-0 hidden md:flex flex-col gap-6 pr-6">
                 {/* All boards */}
                 <Link
-                    href="/user/john"
+                    href={`/user/${userId}`}
                     className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-column transition-colors"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-foreground">
@@ -102,7 +102,7 @@ export const DashboardSidebar = ({ isLoading }: { isLoading: boolean }) => {
                                     {isExpanded && (
                                         <div className="ml-8 mt-1 flex flex-col">
                                             <Link
-                                                href={`/user/john/workspace/${workspace.id}/boards`}
+                                                href={`/user/${userId}/workspace/${workspace.id}/boards`}
                                                 className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm transition-colors ${isActive
                                                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium'
                                                     : 'text-muted-foreground hover:bg-column hover:text-foreground'
@@ -116,7 +116,7 @@ export const DashboardSidebar = ({ isLoading }: { isLoading: boolean }) => {
                                                 Boards
                                             </Link>
                                             <Link
-                                                href={`/user/john/workspace/${workspace.id}/members`}
+                                                href={`/user/${userId}/workspace/${workspace.id}/members`}
                                                 className="flex items-center gap-2 px-3 py-1.5 rounded text-sm text-muted-foreground hover:bg-column hover:text-foreground transition-colors"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -128,7 +128,7 @@ export const DashboardSidebar = ({ isLoading }: { isLoading: boolean }) => {
                                                 Members
                                             </Link>
                                             <Link
-                                                href={`/user/john/workspace/${workspace.id}/settings`}
+                                                href={`/user/${userId}/workspace/${workspace.id}/settings`}
                                                 className="flex items-center gap-2 px-3 py-1.5 rounded text-sm text-muted-foreground hover:bg-column hover:text-foreground transition-colors"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
