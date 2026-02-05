@@ -7,6 +7,10 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { WorkspacesModule } from './workspaces/workspaces.module';
+import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
+import { ResponseInterceptor } from './common/interceptor/response/response.interceptor';
+import { LoggerInterceptor } from './common/interceptor/logger/logger.interceptor';
+import { LoggingExceptionFilter } from './common/filters/logging-exception.filter';
 
 @Module({
 	imports: [
@@ -30,6 +34,20 @@ import { WorkspacesModule } from './workspaces/workspaces.module';
 		NotificationsModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [
+		AppService,
+		{
+			provide: APP_FILTER,
+			useClass: LoggingExceptionFilter,
+		},
+		{
+			provide: APP_INTERCEPTOR,
+			useClass: LoggerInterceptor,
+		},
+		{
+			provide: APP_INTERCEPTOR,
+			useClass: ResponseInterceptor,
+		},
+	],
 })
 export class AppModule { }

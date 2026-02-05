@@ -17,16 +17,11 @@ export class LoggerInterceptor implements NestInterceptor {
 		}
 
 		return next.handle().pipe(
-			tap({
-				next: () => {
-					const response = context.switchToHttp().getResponse();
-					const { statusCode } = response;
-					this.logger.log(`← ${method} ${url} ${statusCode} - ${Date.now() - now}ms`);
-				},
-				error: (error) => {
-					this.logger.error(`✗ ${method} ${url} - ${error.message}`);
-				},
-			}),
+			tap(() => {
+				const response = context.switchToHttp().getResponse();
+				const { statusCode } = response;
+				this.logger.log(`← ${method} ${url} ${statusCode} - ${Date.now() - now}ms`);
+			})
 		);
 	}
 }
