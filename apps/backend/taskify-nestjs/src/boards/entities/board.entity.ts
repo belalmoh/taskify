@@ -15,11 +15,8 @@ export class Board {
     @Column({ type: 'text', nullable: true })
     description: string;
 
-    @Column({ type: 'json', nullable: true })
-    background: {
-        type: 'image' | 'gradient';
-        value: string;
-    };
+    @Column({ type: 'text', nullable: true })
+    background: string;
 
     @Column({ default: false })
     isFavorite: boolean;

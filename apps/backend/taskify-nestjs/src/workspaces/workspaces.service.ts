@@ -15,4 +15,8 @@ export class WorkspacesService {
         workspace.owner = user;
         return this.workspaceRepository.save(workspace);
     }
+
+    async findAll(user: User) {
+        return this.workspaceRepository.find({ where: { owner: user } });
+    }
 }

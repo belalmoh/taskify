@@ -28,8 +28,6 @@ export const loginAction = async (prevState: LoginFormState | null, formData: Fo
 		password: formData.get('password')?.toString() || '',
 	}
 
-	debugger;
-
 	const validationFields = loginSchema.safeParse(rawData);
 
 	if (!validationFields.success) {

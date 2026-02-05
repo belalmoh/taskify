@@ -1,9 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useActionState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
+import { useFormStatus } from 'react-dom';
+import { createWorkspaceAction } from '@/actions/workspace';
+import { toast } from 'sonner';
+import { useAuthentication } from '@/contexts';
 
 interface CreateWorkspaceModalProps {
     isOpen: boolean;
@@ -20,22 +24,62 @@ const WORKSPACE_TYPES = [
     { value: 'other', label: 'Other' },
 ];
 
+const CreateButton = ({ disabled }: { disabled: boolean }) => {
+    const { pending } = useFormStatus();
+    return (
+        <Button
+            type="submit"
+            variant="primary"
+            disabled={pending || disabled}
+            fullWidth
+            className="justify-center mt-8"
+        >
+            {pending ? 'Creating...' : 'Continue'}
+        </Button>
+    );
+};
+
 export const CreateWorkspaceModal = ({ isOpen, onClose }: CreateWorkspaceModalProps) => {
     const [workspaceName, setWorkspaceName] = useState('');
     const [workspaceType, setWorkspaceType] = useState('');
     const [workspaceDescription, setWorkspaceDescription] = useState('');
+    const [state, formAction] = useActionState(createWorkspaceAction, null);
+    const { user } = useAuthentication();
 
-    const handleContinue = () => {
-        console.log('Create workspace:', {
-            name: workspaceName,
-            type: workspaceType,
-            description: workspaceDescription
-        });
-        onClose();
-        // Reset form
-        setWorkspaceName('');
-        setWorkspaceType('');
-        setWorkspaceDescription('');
+    useEffect(() => {
+        if (state?.success) {
+            // Show success toast
+            toast.success('Workspace created!', {
+                description: `${workspaceName} has been successfully created.`,
+            });
+
+            // Reset form
+            setWorkspaceName('');
+            setWorkspaceType('');
+            setWorkspaceDescription('');
+
+            // Close modal
+            onClose();
+        } else if (state?.message && !state?.success) {
+            // Show error toast
+            console.log({ state });
+            toast.error('Failed to create workspace', {
+                description: state.message,
+            });
+        }
+    }, [state, onClose, workspaceName]);
+
+    const handleSubmit = async (formData: FormData) => {
+        // Add user email to form data
+        if (user?.email) {
+            formData.set('owner', JSON.stringify(user));
+        }
+        // Add default values
+        formData.set('color', 'from-blue-400 to-blue-600'); // Default color
+        formData.set('visibility', 'public'); // Default visibility
+        formData.set('members', JSON.stringify([user])); // Empty members array, by default it adds the creator as a member too
+
+        formAction(formData);
     };
 
     return (
@@ -48,19 +92,23 @@ export const CreateWorkspaceModal = ({ isOpen, onClose }: CreateWorkspaceModalPr
                         Boost your productivity by making it easier for everyone to access boards in one location.
                     </p>
 
-                    <div className="space-y-6">
+                    <form action={handleSubmit} className="space-y-6">
                         {/* Workspace Name */}
                         <div>
                             <label className="text-xs font-bold text-foreground mb-2 block">
                                 Workspace name
                             </label>
                             <Input
+                                name='name'
                                 autoFocus
                                 value={workspaceName}
                                 onChange={(e) => setWorkspaceName(e.target.value)}
                                 placeholder="Taco's Co."
                                 className="bg-background border-input h-10"
                             />
+                            {state?.errors?.name && (
+                                <p className="text-xs text-red-500 mt-1.5">{state.errors.name[0]}</p>
+                            )}
                             <p className="text-xs text-muted-foreground mt-1.5">
                                 This is the name of your company, team or organization.
                             </p>
@@ -73,6 +121,7 @@ export const CreateWorkspaceModal = ({ isOpen, onClose }: CreateWorkspaceModalPr
                             </label>
                             <div className="relative">
                                 <select
+                                    name='type'
                                     value={workspaceType}
                                     onChange={(e) => setWorkspaceType(e.target.value)}
                                     className="w-full h-10 px-3 py-2 rounded-md border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-input appearance-none cursor-pointer"
@@ -98,28 +147,24 @@ export const CreateWorkspaceModal = ({ isOpen, onClose }: CreateWorkspaceModalPr
                                 Workspace description <span className="text-muted-foreground font-normal">Optional</span>
                             </label>
                             <textarea
+                                name='description'
                                 value={workspaceDescription}
                                 onChange={(e) => setWorkspaceDescription(e.target.value)}
                                 placeholder="Our team organizes everything here."
                                 rows={4}
                                 className="w-full px-3 py-2 rounded-md border border-input bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-input resize-none"
                             />
+                            {state?.errors?.description && (
+                                <p className="text-xs text-red-500 mt-1.5">{state.errors.description[0]}</p>
+                            )}
                             <p className="text-xs text-muted-foreground mt-1.5">
                                 Get your members on board with a few words about your Workspace.
                             </p>
                         </div>
 
                         {/* Continue Button */}
-                        <Button
-                            variant="primary"
-                            onClick={handleContinue}
-                            disabled={!workspaceName || !workspaceType}
-                            fullWidth
-                            className="justify-center mt-8"
-                        >
-                            Continue
-                        </Button>
-                    </div>
+                        <CreateButton disabled={!workspaceName || !workspaceType} />
+                    </form>
                 </div>
 
                 {/* Right side - Illustration */}

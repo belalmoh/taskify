@@ -9,9 +9,9 @@ export class JwtAuthGuard implements CanActivate {
         context: ExecutionContext,
     ): boolean | Promise<boolean> | Observable<boolean> {
         const request = context.switchToHttp().getRequest();
-        const token = this.extractTokenFromHeader(request);
+        const token = this.extractToken(request);
         if (!token) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('No authentication token found');
         }
         try {
             const decodedToken = this.jwtService.verify(token);
@@ -22,11 +22,19 @@ export class JwtAuthGuard implements CanActivate {
         }
     }
 
-    private extractTokenFromHeader(request: any): string | null {
-        const authHeader = request.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return null;
+    private extractToken(request: any): string | null {
+        // First, try to get token from cookies (since frontend uses credentials: 'include')
+        const cookieToken = request.cookies?.access_token;
+        if (cookieToken) {
+            return cookieToken;
         }
-        return authHeader.split(' ')[1];
+
+        // Fallback to Authorization header
+        const authHeader = request.headers.authorization;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            return authHeader.split(' ')[1];
+        }
+
+        return null;
     }
 }
