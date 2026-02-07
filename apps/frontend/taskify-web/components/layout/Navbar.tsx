@@ -3,6 +3,7 @@ import { Input } from '../ui/Input';
 import { Avatar } from '../ui/Avatar';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import Link from 'next/link';
+import { getAvatarName } from '@/lib/utils/helpers';
 
 export const Navbar = ({ user }: { user: any }) => {
 	console.log({ user });
@@ -48,7 +49,7 @@ export const Navbar = ({ user }: { user: any }) => {
 				</div>
 
 				{/* Profile */}
-				<Avatar fallback="BM" className="cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all" />
+				<Avatar fallback={getAvatarName(user?.name)} className="cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all" />
 			</div>
 		</nav>
 	);
