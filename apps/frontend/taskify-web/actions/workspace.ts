@@ -1,6 +1,7 @@
 'use server';
 
 import { createWorkspaceSchema } from '@/lib/validations/workspace';
+import { authenticatedFetch } from '@/lib/utils/fetch';
 
 export type CreateWorkspaceFormState = {
     success?: boolean;
@@ -34,7 +35,8 @@ export const createWorkspaceAction = async (prevState: CreateWorkspaceFormState 
         description: formData.get('description')?.toString() || '',
         color: formData.get('color')?.toString() || '',
         visibility: formData.get('visibility')?.toString() || '',
-        owner: formData.get('owner')?.toString() || ''
+        ownerEmail: formData.get('ownerEmail')?.toString() || '',
+        memberEmails: formData.get('memberEmails')?.toString() || '[]'
     }
 
     const validationFields = createWorkspaceSchema.safeParse(rawData);
@@ -48,22 +50,18 @@ export const createWorkspaceAction = async (prevState: CreateWorkspaceFormState 
     }
 
     try {
-        const API = `${process.env.BACKEND_URL}/api/workspaces`;
         const payload = {
             name: rawData.name,
             description: rawData.description,
             color: rawData.color,
             visibility: rawData.visibility,
-            owner: rawData.owner
+            ownerEmail: rawData.ownerEmail,
+            memberEmails: rawData.memberEmails
         };
 
-        const response = await fetch(API, {
+        const response = await authenticatedFetch('/api/workspaces', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
-            credentials: 'include',
+            body: payload,
         });
 
         if (!response.ok) {
@@ -91,14 +89,8 @@ export const createWorkspaceAction = async (prevState: CreateWorkspaceFormState 
 export const getWorkspacesAction = async (prevState: GetWorkspacesFormState | null) => {
 
     try {
-        const API = `${process.env.BACKEND_URL}/api/workspaces`;
-
-        const response = await fetch(API, {
+        const response = await authenticatedFetch('/api/workspaces', {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
         });
 
         if (!response.ok) {

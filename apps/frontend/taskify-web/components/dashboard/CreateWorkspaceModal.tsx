@@ -72,12 +72,12 @@ export const CreateWorkspaceModal = ({ isOpen, onClose }: CreateWorkspaceModalPr
     const handleSubmit = async (formData: FormData) => {
         // Add user email to form data
         if (user?.email) {
-            formData.set('owner', JSON.stringify(user));
+            formData.set('ownerEmail', user.email);
         }
         // Add default values
         formData.set('color', 'from-blue-400 to-blue-600'); // Default color
         formData.set('visibility', 'public'); // Default visibility
-        formData.set('members', JSON.stringify([user])); // Empty members array, by default it adds the creator as a member too
+        formData.set('memberEmails', JSON.stringify([user?.email])); // By default it adds the creator as a member too
 
         formAction(formData);
     };

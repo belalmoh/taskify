@@ -23,7 +23,6 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     private extractToken(request: any): string | null {
-        // First, try to get token from cookies (since frontend uses credentials: 'include')
         const cookieToken = request.cookies?.access_token;
         if (cookieToken) {
             return cookieToken;

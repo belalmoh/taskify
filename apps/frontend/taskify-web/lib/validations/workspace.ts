@@ -8,7 +8,8 @@ export const createWorkspaceSchema = z.object({
     visibility: z.enum(['private', 'public'], {
         message: 'Visibility must be either private or public'
     }),
-    owner: z.string(),
+    ownerEmail: z.email('Invalid owner email'),
+    memberEmails: z.string().optional(), // JSON string of email array
 });
 
 // Schema for updating a workspace

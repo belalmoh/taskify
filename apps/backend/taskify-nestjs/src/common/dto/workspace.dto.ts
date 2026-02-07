@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class WorkspaceDto {
     id: number;
@@ -17,7 +17,7 @@ export class CreateWorkspaceDto {
     @IsString({ message: 'Name must be a string' })
     name: string;
 
-    @IsNotEmpty({ message: 'Description is required' })
+    @IsOptional()
     @IsString({ message: 'Description must be a string' })
     description: string;
 
@@ -43,7 +43,7 @@ export class UpdateWorkspaceDto {
     @IsString({ message: 'Name must be a string' })
     name: string;
 
-    @IsNotEmpty({ message: 'Description is required' })
+    @IsOptional()
     @IsString({ message: 'Description must be a string' })
     description: string;
 
