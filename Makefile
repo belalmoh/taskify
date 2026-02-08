@@ -1,4 +1,4 @@
-.PHONY: run-web-local run-all-local run-backend-local
+.PHONY: run-web-local run-all-local run-backend-local install-dependencies
 
 run-backend-local:
 	@echo "Running docker locally..."
@@ -14,3 +14,8 @@ run-web-local:
 run-all-local:
 	@make run-web-local &
 	@make run-backend-local
+
+install-dependencies:
+	@echo "Installing dependencies..."
+	@cd apps/backend/taskify-nestjs && npm install
+	@cd apps/frontend/taskify-web && npm install
