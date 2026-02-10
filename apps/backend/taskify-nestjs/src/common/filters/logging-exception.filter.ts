@@ -18,13 +18,25 @@ export class LoggingExceptionFilter implements ExceptionFilter {
             ? exception.message
             : 'Internal server error';
 
-        // Log the error
+        const stack = exception instanceof Error ? exception.stack : '';
+
+        // Log the error with status and message
         this.logger.error(`✗ ${request.method} ${request.url} ${status} - ${message}`);
 
-        // Send JSON response instead of re-throwing
+        // If it's a 500 error or not an HttpException, log the stack trace
+        if (status >= 500 || !(exception instanceof HttpException)) {
+            this.logger.error(stack);
+        }
+
         const errorResponse = exception instanceof HttpException
             ? exception.getResponse()
-            : { message: 'Internal server error' };
+            : {
+                statusCode: status,
+                timestamp: new Date().toISOString(),
+                path: request.url,
+                message: 'Internal server error',
+                error: exception instanceof Error ? exception.message : 'Unknown'
+            };
 
         response.status(status).json(errorResponse);
     }

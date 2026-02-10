@@ -4,14 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CreateWorkspaceModal } from './CreateWorkspaceModal';
-import { DashboardSidebarSkeleton } from './DashboardSidebarSkeleton';
 
-const WORKSPACES = [
-    { id: '1', name: 'Life Coach - NU Graduation Project', shortName: 'Life Coach - NU', initial: 'L', color: 'from-blue-400 to-blue-600' },
-    { id: '2', name: 'Side Hustle', shortName: 'Side Hustle', initial: 'S', color: 'from-purple-400 to-pink-600' },
-];
-
-export const DashboardSidebar = ({ isLoading, userId }: { isLoading: boolean; userId: string }) => {
+export const DashboardSidebar = ({ userId, workspaces = [] }: { userId: string; workspaces?: any[] }) => {
     const [isCreateWorkspaceModalOpen, setIsCreateWorkspaceModalOpen] = useState(false);
     const [expandedWorkspaces, setExpandedWorkspaces] = useState<Set<string>>(new Set()); // Default first workspace expanded
     const pathname = usePathname();
@@ -31,10 +25,6 @@ export const DashboardSidebar = ({ isLoading, userId }: { isLoading: boolean; us
     const isWorkspaceActive = (workspaceId: string) => {
         return pathname?.startsWith(`/workspace/${workspaceId}`);
     };
-
-    if (isLoading) {
-        return <DashboardSidebarSkeleton />;
-    }
 
     return (
         <>
@@ -65,9 +55,11 @@ export const DashboardSidebar = ({ isLoading, userId }: { isLoading: boolean; us
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        {WORKSPACES.map((workspace) => {
+                        {workspaces.map((workspace) => {
                             const isExpanded = expandedWorkspaces.has(workspace.id);
                             const isActive = isWorkspaceActive(workspace.id);
+                            const initial = workspace.initial || workspace.name?.charAt(0) || 'W';
+                            const shortName = workspace.shortName || workspace.name;
 
                             return (
                                 <div key={workspace.id}>
@@ -77,10 +69,10 @@ export const DashboardSidebar = ({ isLoading, userId }: { isLoading: boolean; us
                                         className="w-full flex items-center justify-between px-3 py-2 hover:bg-column rounded-md cursor-pointer transition-colors"
                                     >
                                         <div className="flex items-center gap-2">
-                                            <div className={`h-6 w-6 rounded bg-gradient-to-tr ${workspace.color} flex items-center justify-center text-[10px] font-bold text-white`}>
-                                                {workspace.initial}
+                                            <div className={`h-6 w-6 rounded bg-gradient-to-tr ${workspace.color || 'from-gray-400 to-gray-500'} flex items-center justify-center text-[10px] font-bold text-white`}>
+                                                {initial}
                                             </div>
-                                            <span className="text-sm font-medium text-foreground">{workspace.shortName}</span>
+                                            <span className="text-sm font-medium text-foreground">{shortName}</span>
                                         </div>
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -142,6 +134,17 @@ export const DashboardSidebar = ({ isLoading, userId }: { isLoading: boolean; us
                                 </div>
                             );
                         })}
+
+                        {/* Create Workspace Button */}
+                        <button
+                            onClick={() => setIsCreateWorkspaceModalOpen(true)}
+                            className="w-full flex items-center gap-2 px-3 py-2 mt-2 border-2 border-dashed border-muted-foreground/20 hover:border-muted-foreground/40 hover:bg-column rounded-md transition-all text-muted-foreground hover:text-foreground group cursor-pointer"
+                        >
+                            <div className="h-6 w-6 rounded bg-muted/10 flex items-center justify-center text-muted-foreground group-hover:bg-muted/20 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                            </div>
+                            <span className="text-sm font-medium">Create a workspace</span>
+                        </button>
                     </div>
                 </div>
             </div>

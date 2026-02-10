@@ -77,7 +77,7 @@ export const SignupForm = ({ onSwitchToLogin }: SignupFormProps) => {
 
             // Redirect to user's dashboard after a short delay
             setTimeout(() => {
-                router.push(`/user/${state.data.user.name}`);
+                router.push(`/user/${state.data.user.id}`);
             }, 1000);
         } else if (state?.success === false && state?.message) {
             // Show error toast for failed signup

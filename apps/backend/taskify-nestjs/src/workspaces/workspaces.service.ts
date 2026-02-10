@@ -17,6 +17,8 @@ export class WorkspacesService {
     }
 
     async findAll(user: User) {
-        return this.workspaceRepository.find({ where: { owner: user } });
+        return this.workspaceRepository.find({
+            where: { owner: { id: user.id } }
+        });
     }
 }

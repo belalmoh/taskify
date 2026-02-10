@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { getAvatarName } from '@/lib/utils/helpers';
 
 export const Navbar = ({ user }: { user: any }) => {
-	console.log({ user });
 	return (
 		<nav className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shadow-sm">
 			{/* Left: Logo & Nav Links */}
@@ -24,8 +23,6 @@ export const Navbar = ({ user }: { user: any }) => {
 					<Link href="/starred" className="hover:text-primary">Starred</Link>
 					<Link href="/templates" className="hover:text-primary">Templates</Link>
 				</div>
-
-				<Button variant="primary" size="sm" className="hidden md:flex">Create</Button>
 			</div>
 
 			{/* Right: Search & Profile */}

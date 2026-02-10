@@ -1,5 +1,6 @@
 'use server';
 
+import { authenticatedFetch } from '@/lib/utils/fetch';
 import { signupSchema, loginSchema } from '@/lib/validations/auth';
 
 export type SignUpFormState = {
@@ -144,6 +145,35 @@ export const signupAction = async (prevState: SignUpFormState | null, formData: 
 		return responseData;
 	} catch (error) {
 		console.error('Signup error:', error);
+		return {
+			success: false,
+			message: 'An unexpected error occurred. Please try again.',
+			errors: {},
+		};
+	}
+}
+
+export const getCurrentUserInfo = async () => {
+	try {
+		const response = await authenticatedFetch('/api/auth/me', {
+			method: 'GET',
+
+		});
+
+		if (!response.ok) {
+			const { error } = await response.json().catch(error => error);
+			return {
+				success: false,
+				message: error.message || 'Get user info failed. Please try again.',
+				error,
+			};
+		}
+
+		const responseData = await response.json();
+
+		return responseData;
+	} catch (error) {
+		console.error('Get user info error:', error);
 		return {
 			success: false,
 			message: 'An unexpected error occurred. Please try again.',
