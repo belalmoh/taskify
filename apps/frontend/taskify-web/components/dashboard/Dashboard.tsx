@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { BoardListCard, CreateBoardCard } from "@/components/dashboard/BoardListCard";
 import { CreateBoardModal } from "@/components/dashboard/CreateBoardModal";
 import Link from 'next/link';
+import { getInitial } from '@/lib/utils/helpers';
 
 interface DashboardPropTypes {
     userId: string;
@@ -87,7 +88,7 @@ export const Dashboard = ({ userId, workspaces = [], boards = [] }: DashboardPro
 
                 {workspaces.map((workspace) => {
                     const boards = workspace.boards || [];
-                    const initial = workspace.initial || workspace.name?.charAt(0) || 'W';
+                    const initial = getInitial(workspace.name);
 
                     return (
                         <div key={workspace.id} className="mb-10">

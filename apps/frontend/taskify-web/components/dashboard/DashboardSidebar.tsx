@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CreateWorkspaceModal } from './CreateWorkspaceModal';
+import { getInitial } from '@/lib/utils/helpers';
 
 export const DashboardSidebar = ({ userId, workspaces = [] }: { userId: string; workspaces?: any[] }) => {
     const [isCreateWorkspaceModalOpen, setIsCreateWorkspaceModalOpen] = useState(false);
@@ -58,7 +59,7 @@ export const DashboardSidebar = ({ userId, workspaces = [] }: { userId: string; 
                         {workspaces.map((workspace) => {
                             const isExpanded = expandedWorkspaces.has(workspace.id);
                             const isActive = isWorkspaceActive(workspace.id);
-                            const initial = workspace.initial || workspace.name?.charAt(0) || 'W';
+                            const initial = getInitial(workspace.name);
                             const shortName = workspace.shortName || workspace.name;
 
                             return (

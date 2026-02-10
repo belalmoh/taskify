@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
+import { getInitial } from '@/lib/utils/helpers';
 
 interface CreateBoardModalProps {
     isOpen: boolean;
@@ -203,7 +204,7 @@ export const CreateBoardModal = ({ isOpen, onClose, workspaces }: CreateBoardMod
                 </div>
 
                 {/* Workspace - Custom Dropdown */}
-                {/* <div>
+                <div>
                     <label className="text-xs font-bold text-muted-foreground mb-1.5 block">Workspace</label>
                     <div className="relative" ref={dropdownRef}>
                         <button
@@ -213,7 +214,7 @@ export const CreateBoardModal = ({ isOpen, onClose, workspaces }: CreateBoardMod
                         >
                             <div className="flex items-center gap-2">
                                 <div className={`h-6 w-6 rounded bg-gradient-to-tr ${selectedWorkspace.color} flex items-center justify-center text-xs font-bold text-white`}>
-                                    {selectedWorkspace.initial}
+                                    {getInitial(selectedWorkspace.name)}
                                 </div>
                                 <span className="truncate">{selectedWorkspace.name}</span>
                             </div>
@@ -249,7 +250,7 @@ export const CreateBoardModal = ({ isOpen, onClose, workspaces }: CreateBoardMod
                                             }`}
                                     >
                                         <div className={`h-6 w-6 rounded bg-gradient-to-tr ${workspace.color} flex items-center justify-center text-xs font-bold text-white shrink-0`}>
-                                            {workspace.initial}
+                                            {getInitial(workspace.name)}
                                         </div>
                                         <span className="text-sm truncate">{workspace.name}</span>
                                     </button>
@@ -257,7 +258,7 @@ export const CreateBoardModal = ({ isOpen, onClose, workspaces }: CreateBoardMod
                             </div>
                         )}
                     </div>
-                </div> */}
+                </div>
 
                 {/* Create Button */}
                 <div className="flex justify-end gap-2 pt-2">

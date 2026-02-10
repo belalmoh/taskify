@@ -3,18 +3,18 @@
 import React, { createContext, useContext, useState } from 'react';
 
 interface AppDataContextType {
-    workspaces: any[];
+    workspaces: any[] | null;
     setWorkspaces: (workspaces: any[]) => void;
 
-    boards: any[];
+    boards: any[] | null;
     setBoards: (boards: any[]) => void;
 }
 
 const AppDataContext = createContext<AppDataContextType | undefined>(undefined);
 
 export function AppDataProvider({ children }: { children: React.ReactNode }) {
-    const [workspaces, setWorkspaces] = useState<any[]>([]);
-    const [boards, setBoards] = useState<any[]>([]);
+    const [workspaces, setWorkspaces] = useState<any[] | null>(null);
+    const [boards, setBoards] = useState<any[] | null>(null);
 
     return (
         <AppDataContext.Provider value={{ workspaces, setWorkspaces, boards, setBoards }}>
@@ -23,10 +23,24 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
-export const useAppData = () => {
+export const useAppData = (initialData?: { workspaces?: any[], boards?: any[] }) => {
     const context = useContext(AppDataContext);
     if (context === undefined) {
         throw new Error('useAppData must be used within a AppDataProvider');
     }
-    return context;
+
+    // Use initialData fallback only if context is strictly null
+    const workspaces = (context.workspaces === null && initialData?.workspaces)
+        ? initialData.workspaces
+        : (context.workspaces || []);
+
+    const boards = (context.boards === null && initialData?.boards)
+        ? initialData.boards
+        : (context.boards || []);
+
+    return {
+        ...context,
+        workspaces,
+        boards
+    };
 };

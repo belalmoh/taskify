@@ -1,3 +1,5 @@
+'use client';
+
 // Skeleton card component with animated title placeholder
 const SkeletonBoardCard = () => {
     return (
