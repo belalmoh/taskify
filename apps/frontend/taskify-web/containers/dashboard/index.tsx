@@ -4,7 +4,7 @@ import { Dashboard } from "@/components/dashboard/Dashboard";
 import { DashboardSkeleton } from "@/components/dashboard/DashboardSkeleton";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { DashboardSidebarSkeleton } from "@/components/dashboard/DashboardSidebarSkeleton";
-import { useAuthentication } from "@/contexts";
+import { useAppData, useAuthentication } from "@/contexts";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -12,10 +12,20 @@ export default function DashboardContainer({ initialWorkspaces }: { initialWorks
     const { isAuthenticated, isLoading, user } = useAuthentication();
     const router = useRouter();
 
+    const { workspaces, setWorkspaces, boards, setBoards } = useAppData();
+
     useEffect(() => {
         // Wait for auth check to complete before redirecting
         if (!isLoading && !isAuthenticated) {
             router.push('/');
+        } else {
+            setWorkspaces(initialWorkspaces);
+            setBoards([]);
+        }
+
+        return () => {
+            setWorkspaces([]);
+            setBoards([]);
         }
     }, [isAuthenticated, isLoading, router]);
 
@@ -24,13 +34,13 @@ export default function DashboardContainer({ initialWorkspaces }: { initialWorks
             {isLoading ? (
                 <DashboardSidebarSkeleton />
             ) : (
-                <DashboardSidebar userId={user?.id || ''} workspaces={initialWorkspaces} />
+                <DashboardSidebar userId={user?.id || ''} workspaces={workspaces} />
             )}
             <div className="flex-1 overflow-y-auto">
                 {isLoading ? (
                     <DashboardSkeleton />
                 ) : (
-                    <Dashboard userId={user?.id || ''} workspaces={initialWorkspaces} />
+                    <Dashboard userId={user?.id || ''} workspaces={workspaces} boards={boards} />
                 )}
             </div>
         </div>

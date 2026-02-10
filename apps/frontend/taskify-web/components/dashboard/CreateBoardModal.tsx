@@ -8,6 +8,7 @@ import { Input } from '../ui/Input';
 interface CreateBoardModalProps {
     isOpen: boolean;
     onClose: () => void;
+    workspaces: any[];
 }
 
 const BACKGROUNDS = [
@@ -40,16 +41,11 @@ const MORE_COLORS = [
     { value: 'linear-gradient(to right, #ff9966, #ff5e62)', id: 10 },
 ];
 
-const WORKSPACES = [
-    { id: 1, name: 'Life Coach - NU Graduation Project', initial: 'L', color: 'from-blue-400 to-blue-600' },
-    { id: 2, name: 'Side Hustle', initial: 'S', color: 'from-purple-400 to-pink-600' },
-];
-
-export const CreateBoardModal = ({ isOpen, onClose }: CreateBoardModalProps) => {
+export const CreateBoardModal = ({ isOpen, onClose, workspaces }: CreateBoardModalProps) => {
     const [title, setTitle] = useState('');
     const [selectedBackground, setSelectedBackground] = useState(BACKGROUNDS[0]);
     const [showAllBackgrounds, setShowAllBackgrounds] = useState(false);
-    const [selectedWorkspace, setSelectedWorkspace] = useState(WORKSPACES[0]);
+    const [selectedWorkspace, setSelectedWorkspace] = useState(workspaces[0]);
     const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -207,7 +203,7 @@ export const CreateBoardModal = ({ isOpen, onClose }: CreateBoardModalProps) => 
                 </div>
 
                 {/* Workspace - Custom Dropdown */}
-                <div>
+                {/* <div>
                     <label className="text-xs font-bold text-muted-foreground mb-1.5 block">Workspace</label>
                     <div className="relative" ref={dropdownRef}>
                         <button
@@ -239,7 +235,7 @@ export const CreateBoardModal = ({ isOpen, onClose }: CreateBoardModalProps) => 
 
                         {isWorkspaceDropdownOpen && (
                             <div className="absolute z-10 w-full mt-1 bg-card border border-border rounded-md shadow-lg overflow-hidden">
-                                {WORKSPACES.map((workspace) => (
+                                {workspaces.map((workspace) => (
                                     <button
                                         key={workspace.id}
                                         type="button"
@@ -261,7 +257,7 @@ export const CreateBoardModal = ({ isOpen, onClose }: CreateBoardModalProps) => 
                             </div>
                         )}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Create Button */}
                 <div className="flex justify-end gap-2 pt-2">

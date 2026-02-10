@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardsService } from './boards.service';
 import { BoardsController } from './boards.controller';
 import { WorkspacesModule } from '../workspaces/workspaces.module';
+import { AuthModule } from '../auth/auth.module';
 import {
 	Board,
 	BoardColumn,
@@ -26,7 +27,8 @@ import {
 			ChecklistItem,
 			Comment,
 			Attachment
-		])
+		]),
+		AuthModule,
 	],
 	providers: [BoardsService],
 	controllers: [BoardsController]

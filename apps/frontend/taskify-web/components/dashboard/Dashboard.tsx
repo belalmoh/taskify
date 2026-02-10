@@ -1,17 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BoardListCard, CreateBoardCard } from "@/components/dashboard/BoardListCard";
 import { CreateBoardModal } from "@/components/dashboard/CreateBoardModal";
 import Link from 'next/link';
 
-export const Dashboard = ({ userId, workspaces = [] }: { userId: string; workspaces?: any[] }) => {
+interface DashboardPropTypes {
+    userId: string;
+    workspaces?: Workspace[];
+    boards?: Board[];
+}
+
+interface Board {
+    id: string;
+    title: string;
+    background: string;
+    isStarred: boolean;
+}
+
+interface Workspace {
+    id: string;
+    name: string;
+    initial: string;
+    color: string;
+    boards: Board[];
+}
+
+export const Dashboard = ({ userId, workspaces = [], boards = [] }: DashboardPropTypes) => {
     const [isCreateBoardModalOpen, setIsCreateBoardModalOpen] = useState(false);
 
     // Flatten all boards to find starred ones
     const allBoards = workspaces.flatMap(ws => (ws.boards || []).map((b: any) => ({ ...b, workspaceId: ws.id })));
     const starredBoards = allBoards.filter(b => b.isStarred);
     const recentlyViewedBoards = allBoards.slice(0, 4); // Dummy recently viewed for now
+
+    useEffect(() => {
+        console.log(workspaces);
+    }, [workspaces]);
 
     return (
         <>
@@ -113,7 +138,7 @@ export const Dashboard = ({ userId, workspaces = [] }: { userId: string; workspa
                 })}
             </div>
 
-            <CreateBoardModal isOpen={isCreateBoardModalOpen} onClose={() => setIsCreateBoardModalOpen(false)} />
+            <CreateBoardModal isOpen={isCreateBoardModalOpen} onClose={() => setIsCreateBoardModalOpen(false)} workspaces={workspaces} />
         </>
     );
 };
