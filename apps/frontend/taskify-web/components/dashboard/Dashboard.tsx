@@ -35,10 +35,6 @@ export const Dashboard = ({ userId, workspaces = [], boards = [] }: DashboardPro
     const starredBoards = allBoards.filter(b => b.isStarred);
     const recentlyViewedBoards = allBoards.slice(0, 4); // Dummy recently viewed for now
 
-    useEffect(() => {
-        console.log(workspaces);
-    }, [workspaces]);
-
     return (
         <>
             {/* Starred Boards */}

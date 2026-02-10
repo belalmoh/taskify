@@ -28,7 +28,7 @@ export default function DashboardContainer({ initialWorkspaces }: { initialWorks
             setWorkspaces([]);
             setBoards([]);
         }
-    }, [isAuthenticated, isLoading, router]);
+    }, [isAuthenticated, isLoading, router, initialWorkspaces]);
 
     return (
         <div className="flex w-full max-w-7xl mx-auto md:py-8 px-4 md:px-8 h-full">
